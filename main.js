@@ -5,7 +5,7 @@ document.getElementById('searchButton').addEventListener('click', function() {
    
     if (!pokemonId) {
   
-      const invalidID = `<p>Por favor ingresa un ID de Pokémon válido.</p>`;
+      const invalidID = `<p>Por favor ingresa un ID de Pokemon.</p>`;
     
       document.getElementById('pokemonInfo').innerHTML = invalidID;
 
@@ -20,20 +20,30 @@ document.getElementById('searchButton').addEventListener('click', function() {
       .then(response => {
        
         if (!response.ok) {
-          throw new Error('No se encontró el Pokémon');
+          throw new Error('No se encontró el Pokemon');
         }
         return response.json(); 
       })
       .then(data => {
 
         const heightInMeters = data.height / 10;
+        const weightInKilograms = data.weight / 10;
         let heightDisplay;
+        let weightDisplay;
 
         if (heightInMeters < 1) {
-          heightDisplay = `${heightInMeters * 100} Centimetros`;
+          heightDisplay = `${heightInMeters * 100} Centímetros`;
         } else {
-          heightDisplay = `${heightInMeters} ${heightInMeters === 1 ? 'Metro' : 'Metros'}`; 
+          heightDisplay = `${heightInMeters} ${heightInMeters === 1 ? 'Metro' : 'Metros'}`;
         }
+        
+        
+        if (weightInKilograms < 1) {
+          weightDisplay = `${weightInKilograms * 1000} Gramos`;
+        } else {
+          weightDisplay = `${weightInKilograms} ${weightInKilograms === 1 ? 'Kilogramo' : 'Kilogramos'}`;
+        }
+        
 
         
         const pokemonInfo = `
@@ -41,7 +51,7 @@ document.getElementById('searchButton').addEventListener('click', function() {
           <img src="${data.sprites.front_default}" alt="${data.name}" />
           <p><strong>Tipo:</strong> ${data.types.map(type => type.type.name).join(', ')}</p>
           <p><strong>Altura:</strong> ${heightDisplay}</p>
-          <p><strong>Peso:</strong> ${data.weight / 10} Kilogramos</p>
+          <p><strong>Peso:</strong> ${weightDisplay}</p>
         `;
         document.getElementById('pokemonInfo').innerHTML = pokemonInfo;
       })
